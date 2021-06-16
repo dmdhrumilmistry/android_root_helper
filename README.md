@@ -28,7 +28,7 @@ Android Rooting made easy.
 
    1. Install Any [Python3](https://www.python.org/) version on Windows machine. 
    
-   2. While installing make sure to tick `<strong>Add Python to Path</strong>`, else add it by editing environment variables.
+   2. While installing make sure to tick <strong>`Add Python to Path`</strong>, else add it by editing environment variables.
    
    3. Download or clone [Android Root Helper](https://github.com/dmdhrumilmistry/android_root_helper) respository.</br>
       ```
