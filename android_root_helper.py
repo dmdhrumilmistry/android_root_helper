@@ -127,6 +127,6 @@ def start_custom_recovery_flash():
         
 
 pre_requisites()
-# setup_adb()
-# start_adb_server()
-# connected_devices()
+setup_adb()
+start_adb_server()
+connected_devices()
