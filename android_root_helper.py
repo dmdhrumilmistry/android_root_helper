@@ -64,7 +64,6 @@ def start_custom_recovery_flash():
 
 
 setup_adb()
-
-# start_adb_server()
-# connected_devices()
+start_adb_server()
+connected_devices()
 
