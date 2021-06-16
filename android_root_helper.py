@@ -1,28 +1,20 @@
 from subprocess import call, check_output
-from os.path import join, isdir
+from os.path import join, isdir, isfile
 from os import getcwd, environ, pathsep
 
 
 def pre_requisites():
-    print('''
+    if isfile('pre-requisites.txt'):
+        with open('pre-requisites.txt','r') as f:
+            important_lines = f.readlines()
+            for line in important_lines:
+                print(line, end='')
+        
+        f.close()   
     
-    Android Root Helper, Written By Dhrumil Mistry.
+    else:
+        print('[*] pre-requisites.txt not found. Cannot proceed Further, download this software again.')
 
-    Please make sure, you have required files and softwares installed before proceeding.
-    1. Python 3.x.x
-    2. USB and Universal ADB/ADB drivers installed for your device on this windows machine.
-    3. Custom Recovery image for your android device like TWRP, CWM, etc.
-    4. Enough charge on your devices.
-    5. Patience 🙂
-
-    Note: I'm not responsible for any damage to your device, This software comes with absolutely 
-    no guarantee and warranty. You're completely responsible for your actions.
-    If you use this software/script you agree to all my terms and conditions.
-    this software doesn't collect any data from your device.
-
-    If you face any issues, do consider opening an issue on the repo.
-    
-    ''')
 
 def setup_adb()->bool:
     '''
@@ -89,6 +81,6 @@ def start_custom_recovery_flash():
 
 
 pre_requisites()
-setup_adb()
-start_adb_server()
-connected_devices()
+# setup_adb()
+# start_adb_server()
+# connected_devices()
