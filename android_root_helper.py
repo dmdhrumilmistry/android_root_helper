@@ -20,7 +20,7 @@ def setup_adb()->bool:
             print('[*] Checking if ADB is working!')
             check_adb_version =check_output('adb --version', shell=True).decode()
             print(check_adb_version)
-            user_check = input('Can you see any abd version installed? (y/n)').lower()
+            user_check = input('Can you see any abd version installed? (y/n) : ').lower()
             if user_check == 'y':
                 print('[+] ADB installed successfully!')
                 return True
