@@ -149,7 +149,7 @@ def adb_reboot_recovery()->bool:
     reboots android device into recovery.
     '''
     try:
-        recovery_reboot_output = check_output('adb reboot-recovery', shell=True).decode()
+        recovery_reboot_output = check_output('adb reboot recovery', shell=True).decode()
         print(recovery_reboot_output)
         sleep(2)
 
