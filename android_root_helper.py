@@ -1,6 +1,12 @@
 from subprocess import call, check_output
 from os.path import join, isdir, isfile
-from os import getcwd, environ, pathsep
+from os import error, getcwd, environ, pathsep
+from time import sleep
+
+
+adb_dir_name = 'minimal_abd_and_fastboot'
+curr_dir = getcwd()
+recovery_name = 'recovery.img'
 
 
 def pre_requisites():
@@ -21,11 +27,9 @@ def setup_adb()->bool:
     performs required tasks to setup adb on the windows machine.
     Sets environment variable for minimal adb and fastboot.
     '''
-    adb_dir = 'minimal_abd_and_fastboot'
-    curr_dir = getcwd()
-
-    if isdir(adb_dir):
-        adb_env_path = join(curr_dir, adb_dir)
+    
+    if isdir(adb_dir_name):
+        adb_env_path = join(curr_dir, adb_dir_name)
     
         environ["PATH"] += pathsep + adb_env_path
         if adb_env_path in environ["PATH"]:
@@ -56,6 +60,9 @@ def start_adb_server():
 
 
 def connected_devices() -> bool:
+    '''
+    checks the devices detected and connected by the windows machine.
+    '''
 
     connected_devices_output = check_output('adb devices', shell=True)
     print(connected_devices_output.decode())
@@ -73,12 +80,51 @@ def start_custom_recovery_flash():
     '''
     starts recovery flashing process.
     '''
-    adb_reboot_bootloader = check_output('adb reboot bootloader').decode()
-    print(adb_reboot_bootloader)
-    
-    print('[*] Important Step : Press any key after placing your custom recovery image file inside this folder, by renaming it to recovery.img')
 
+    def check_recovery_image()->bool:
+        '''
+        checks if recovery image is present in the directory.
+        '''
+        if isfile(recovery_name):
+            print('[*] Found Custom Recovery image.')
+            return True
+        
+        print("[-] No custom recovery image found. Don't to rename custom recovery image as recovery.img")
+        print('[-] Cannot proceed further. Exiting Program...')
+        quit()
 
+    try: 
+
+        if check_recovery_image():
+            recovery_path = join(curr_dir, recovery_name)
+
+            adb_reboot_bootloader_output = check_output('adb reboot bootloader').decode()
+            print(adb_reboot_bootloader_output)
+            sleep(2)
+            
+            input('[*] Important Step : Press any key after placing your custom recovery image file inside this folder, by renaming it to recovery.img')
+            
+            fastboot_flash_output = check_output('fastboot flash recovery {}'.format(recovery_path)).decode()
+            print(fastboot_flash_output)
+            sleep(2)
+
+            fastboot_reboot_bootloader_output = check_output('fastboot reboot-bootloader').decode()
+            print(fastboot_reboot_bootloader_output)
+            sleep(2)
+
+            fastboot_erase_cache_output = check_output('fastboot erase cache').decode()
+            print(fastboot_erase_cache_output)
+            sleep(2)
+
+    except Exception as e:
+        print('[-] An Exception Occurred')
+        return False
+
+    finally:
+        fastboot_reboot_output = check_output('fastboot reboot').decode()
+        print(fastboot_reboot_output)
+        sleep(2)
+        
 
 pre_requisites()
 # setup_adb()
