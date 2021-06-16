@@ -24,6 +24,7 @@ def check_recovery_image()->bool:
 
 if check_recovery_image():
     recovery_path = join(curr_dir, recovery_name)
+    print('[*] Recovery found on this location: \n')
     print(recovery_path)
 
 else:

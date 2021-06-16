@@ -7,6 +7,7 @@ from time import sleep
 adb_dir_name = 'minimal_abd_and_fastboot'
 curr_dir = getcwd()
 recovery_name = 'recovery.img'
+magisk_file_name = 'Magisk-v23.0.zip'
 
 
 def pre_requisites():
@@ -76,7 +77,7 @@ def connected_devices() -> bool:
     return False
 
 
-def start_custom_recovery_flash():
+def start_custom_recovery_flash()->True:
     '''
     starts recovery flashing process.
     '''
@@ -124,10 +125,28 @@ def start_custom_recovery_flash():
         fastboot_reboot_output = check_output('fastboot reboot').decode()
         print(fastboot_reboot_output)
         sleep(2)
+
+        return True
         
+
+def transfer_magisk_zip():
+    '''
+    transfers the magisk manager zip to internal storage.
+    '''
+    source = join(curr_dir, magisk_file_name)
+    destination = '/sdcard/'
+    file_transfer_output = check_output('adb push {} {}'.format(source, destination), shell=True).decode()
+    print(file_transfer_output)
+
 
 pre_requisites()
 setup_adb()
 start_adb_server()
 connected_devices()
-start_custom_recovery_flash()
+if start_custom_recovery_flash():
+    print('[*] Custom image flashed sucessfully.')
+
+    print('[*] Starting to transfer magisk to sd card.')
+    
+else:
+    print('[-] Failed to install custom image. Please try again after installing requirements.')
