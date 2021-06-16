@@ -5,9 +5,9 @@ from time import sleep
 
 
 adb_dir_name = 'minimal_abd_and_fastboot'
-curr_dir = getcwd()
 recovery_name = 'recovery.img'
 magisk_file_name = 'Magisk-v23.0.zip'
+curr_dir = getcwd()
 
 
 def pre_requisites():
@@ -129,14 +129,35 @@ def start_custom_recovery_flash()->True:
         return True
         
 
-def transfer_magisk_zip():
+def transfer_magisk_zip()->bool:
     '''
     transfers the magisk manager zip to internal storage.
     '''
     source = join(curr_dir, magisk_file_name)
     destination = '/sdcard/'
-    file_transfer_output = check_output('adb push {} {}'.format(source, destination), shell=True).decode()
-    print(file_transfer_output)
+    try:
+        file_transfer_output = check_output('adb push {} {}'.format(source, destination), shell=True).decode()
+        print(file_transfer_output)
+
+    except Exception :
+        print('[-] Exception Occurred while transferring Magisk Manager. Due to error you cannot move further but you can manually transfer and install zip.')
+        print('Exception : ', Exception)
+
+
+def adb_reboot_recovery()->bool:
+    '''
+    reboots android device into recovery.
+    '''
+    try:
+        recovery_reboot_output = check_output('adb reboot-recovery', shell=True).decode()
+        print(recovery_reboot_output)
+        sleep(2)
+
+    except Exception :
+        print('[-] Exception occured while rebooting into recovery.')
+        return False
+    
+    return True
 
 
 pre_requisites()
@@ -145,8 +166,18 @@ start_adb_server()
 connected_devices()
 if start_custom_recovery_flash():
     print('[*] Custom image flashed sucessfully.')
+    print('-'*40)
 
     print('[*] Starting to transfer magisk to sd card.')
-    
+    if transfer_magisk_zip():
+        print('[+] Files Transferred successfully.')
+        print('-'*40)
+
+    print('[*] Rebooting into Recovery, install the magisk zip from the sdcard.')
+    if adb_reboot_recovery():
+        print('[*] Now follow instruction Install->Select Storage-> Sd Card-> locate and choose Magisk zip-> swipe to install zip')
+        print('[*] After successfull installation reboot your android device. First Reboot may take some time to boot. Do not interrupt while your android device is booting.')
+        print('[*] Voila!! Now your android device is rooted..')
+
 else:
     print('[-] Failed to install custom image. Please try again after installing requirements.')

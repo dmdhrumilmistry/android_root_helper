@@ -7,6 +7,7 @@ from time import sleep
 adb_dir_name = 'minimal_abd_and_fastboot'
 curr_dir = getcwd()
 recovery_name = 'recovery.img'
+magisk_file_name = 'Magisk-v23.0.zip'
 
   
 def check_recovery_image()->bool:
@@ -20,6 +21,21 @@ def check_recovery_image()->bool:
     print("[-] No custom recovery image found. Don't to rename custom recovery image as recovery.img")
     print('[-] Cannot proceed further. Exiting Program...')
     quit()
+
+
+def transfer_magisk_zip()->bool:
+    '''
+    transfers the magisk manager zip to internal storage.
+    '''
+    source = join(curr_dir, magisk_file_name)
+    destination = '/sdcard/'
+    try:
+        file_transfer_output = check_output('adb push {} {}'.format(source, destination), shell=True).decode()
+        print(file_transfer_output)
+
+    except Exception :
+        print('[-] Exception Occurred while transferring Magisk Manager. Due to error you cannot move further but you can manually transfer and install zip.')
+        print('Exception : ', Exception)
 
 
 if check_recovery_image():
