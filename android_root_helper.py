@@ -106,24 +106,24 @@ def start_custom_recovery_flash()->True:
         if check_recovery_image():
             recovery_path = join(curr_dir, recovery_name)
 
-            adb_reboot_bootloader_output = check_output('adb reboot bootloader').decode()
+            adb_reboot_bootloader_output = check_output('adb reboot bootloader', shell=True).decode()
             print(adb_reboot_bootloader_output)
             sleep(2)
             
             input(YELLOW_BRIGHT + '[*] Important Step : Press any key after placing your custom recovery image file inside this folder, by renaming it to recovery.img if not done yet!')
             
             print(WHITE_BRIGHT + '[*] Flashing Recovery.')
-            fastboot_flash_output = check_output('fastboot flash recovery {}'.format(recovery_path)).decode()
+            fastboot_flash_output = check_output('fastboot flash recovery {}'.format(recovery_path), shell=True).decode()
             print(fastboot_flash_output)
             sleep(2)
 
             print(WHITE_BRIGHT + '[*] Rebooting into bootloader mode.')
-            fastboot_reboot_bootloader_output = check_output('fastboot reboot-bootloader').decode()
+            fastboot_reboot_bootloader_output = check_output('fastboot reboot-bootloader', shell=True).decode()
             print(fastboot_reboot_bootloader_output)
             sleep(2)
 
             print(WHITE_BRIGHT + '[*] Erasing Cache.')
-            fastboot_erase_cache_output = check_output('fastboot erase cache').decode()
+            fastboot_erase_cache_output = check_output('fastboot erase cache', shell=True).decode()
             print(fastboot_erase_cache_output)
             sleep(2)
 
@@ -133,7 +133,7 @@ def start_custom_recovery_flash()->True:
 
     finally:
         print(WHITE_BRIGHT + '[*] Rebooting device into fastboot mode.')
-        fastboot_reboot_output = check_output('fastboot reboot').decode()
+        fastboot_reboot_output = check_output('fastboot reboot', shell=True).decode()
         print(fastboot_reboot_output)
         sleep(2)
 
@@ -167,6 +167,23 @@ def adb_reboot_recovery()->bool:
         sleep(5)
 
     except Exception :
+        print(RED_BRIGHT + '[-] Exception occured while rebooting device.')
+        return False
+    
+    return True
+
+
+def adb_reboot_device()->bool:
+    '''
+    reboots android device into recovery.
+    '''
+    try:
+        print(WHITE_BRIGHT + '[*] Rebooting device.')
+        recovery_reboot_output = check_output('adb reboot', shell=True).decode()
+        print(recovery_reboot_output)
+        sleep(5)
+
+    except Exception :
         print(RED_BRIGHT + '[-] Exception occured while rebooting into recovery.')
         return False
     
@@ -177,29 +194,41 @@ pre_requisites()
 setup_adb()
 start_adb_server()
 connected_devices()
-if start_custom_recovery_flash():
-    print(WHITE_BRIGHT + '[*] Custom image flashed sucessfully.')
-    print('-'*40)
+try:
+    if start_custom_recovery_flash():
+        print(WHITE_BRIGHT + '[*] Custom image flashed sucessfully.')
+        print('-'*40)
 
-    print(WHITE_BRIGHT + '[*] Starting to transfer magisk to sd card.')
-    print(YELLOW_BRIGHT + '[*] press Ctrl+C simultaneously to tranfer files manually to sdcard.')
-    print(WHITE_BRIGHT + '[*] Waiting For Device to detect...')
-    
-    sleep(15)
-    # continue to check if device if not connected.
-    while not connected_devices():
+        print(WHITE_BRIGHT + '[*] Starting to transfer magisk to sd card.')
+        print(YELLOW_BRIGHT + '[*] press Ctrl+C simultaneously to transfer files manually to sdcard.')
+        print(WHITE_BRIGHT + '[*] Waiting For Device to detect...')
+        
+        # wait for some time till device reboots
+        sleep(15)
+
+        # continue to check if device if not connected.
+        while not connected_devices():
+            print(YELLOW_BRIGHT + '[*] Checking for device in 10 seconds....')
+            sleep(10)
+
         if transfer_magisk_zip():
-            print(WHITE_BRIGHT + '[+] Files Transferred successfully.')
-            print('-'*40)
-            print(WHITE_BRIGHT + '[*] Rebooting into Recovery, install the magisk zip from the sdcard.')
-            sleep(5)
+                print(WHITE_BRIGHT + '[+] Files Transferred successfully.')
+                print('-'*40)
+                print(WHITE_BRIGHT + '[*] Rebooting into Recovery, install the magisk zip from the sdcard.')
+                sleep(5)
+            
         
-        
-    
-    if adb_reboot_recovery():
-        print(YELLOW_BRIGHT + '[*] Now follow instruction Install->Select Storage-> Sd Card-> locate and choose Magisk zip-> swipe to install zip')
-        print(YELLOW_BRIGHT + '[*] After successfull installation reboot your android device. First Reboot may take some time to boot. Do not interrupt while your android device is booting.')
-        print(WHITE_BRIGHT + '[*] Voila!! Now your android device will be rooted after installing Magisk zip from recovery..')
+        if adb_reboot_recovery():
+            print(YELLOW_BRIGHT + '[*] Now follow instructions Install->Select Storage-> Sd Card-> locate and choose Magisk zip-> swipe to install zip')
+            print(YELLOW_BRIGHT + '[*] After successfull installation reboot your android device. First Reboot may take some time to boot. Do not interrupt while your android device is booting.')
+            print(WHITE_BRIGHT + '[*] Voila!! Now your android device will be rooted after installing Magisk zip from recovery..')
 
-else:
-    print(RED_BRIGHT + '[-] Failed to install custom image. Please try again after installing requirements.')
+    else:
+        print(RED_BRIGHT + '[-] Failed to install custom image. Please try again after installing requirements.')
+
+except KeyboardInterrupt:
+    print(RED_BRIGHT + '[!] Ctrl+C detected! Exiting...')
+    if adb_reboot_device():
+        print(WHITE_BRIGHT + '[*] Your device is now rebooting.')
+    else:
+        print(YELLOW_BRIGHT + '[!] Please reboot your device manually.')
