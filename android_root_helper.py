@@ -45,7 +45,7 @@ def setup_adb()->bool:
             print(WHITE_BRIGHT + '[*] Checking if ADB is working!')
             check_adb_version =check_output('adb --version', shell=True).decode()
             print(check_adb_version)
-            user_check = input('Can you see any abd version installed? (y/n) : ').lower()
+            user_check = input('Can you see any adb version installed? (y/n) : ').lower()
             if user_check == 'y':
                 print(WHITE_BRIGHT + '[+] ADB installed successfully!')
                 return True
@@ -54,7 +54,7 @@ def setup_adb()->bool:
             quit()
 
     else:
-        print(RED_BRIGHT + '[-] Minimal ABD and Fastboot folder is missing, please clone/download the repository again.')
+        print(RED_BRIGHT + '[-] Minimal ADB and Fastboot folder is missing, please clone/download the repository again.')
         quit()
 
 
