@@ -185,13 +185,15 @@ if start_custom_recovery_flash():
     print(YELLOW_BRIGHT + '[*] press Ctrl+C simultaneously to tranfer files manually to sdcard.')
     print(WHITE_BRIGHT + '[*] Waiting For Device to detect...')
     
-    sleep(10)
-    if connected_devices():
+    sleep(15)
+    # continue to check if device if not connected.
+    while not connected_devices():
         if transfer_magisk_zip():
             print(WHITE_BRIGHT + '[+] Files Transferred successfully.')
             print('-'*40)
-
-        print(WHITE_BRIGHT + '[*] Rebooting into Recovery, install the magisk zip from the sdcard.')
+            print(WHITE_BRIGHT + '[*] Rebooting into Recovery, install the magisk zip from the sdcard.')
+            sleep(5)
+        
         
     
     if adb_reboot_recovery():
