@@ -199,7 +199,7 @@ if start_custom_recovery_flash():
     if adb_reboot_recovery():
         print(YELLOW_BRIGHT + '[*] Now follow instruction Install->Select Storage-> Sd Card-> locate and choose Magisk zip-> swipe to install zip')
         print(YELLOW_BRIGHT + '[*] After successfull installation reboot your android device. First Reboot may take some time to boot. Do not interrupt while your android device is booting.')
-        print(WHITE_BRIGHT + '[*] Voila!! Now your android device is rooted..')
+        print(WHITE_BRIGHT + '[*] Voila!! Now your android device will be rooted after installing Magisk zip from recovery..')
 
 else:
     print(RED_BRIGHT + '[-] Failed to install custom image. Please try again after installing requirements.')
