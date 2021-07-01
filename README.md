@@ -30,19 +30,25 @@ Android Rooting made easy.
    
    2. While installing make sure to tick <strong>`Add Python to Path`</strong>, else add it by editing environment variables.
    
-   3. Download or clone [Android Root Helper](https://github.com/dmdhrumilmistry/android_root_helper) respository.</br>
+   4. Install requirements.txt
+      ```
+      $ pip install -r requirements.txt
+      ```
+      > Note: If you are using Debian based distro or linux you might have to use `$ pip3 install -r requirements.txt`
+   
+   5. Download or clone [Android Root Helper](https://github.com/dmdhrumilmistry/android_root_helper) respository.</br>
       ```
       $ git clone https://github.com/dmdhrumilmistry/android_root_helper 
       ```
       
       <strong> `Note` </strong> : `Prefer using Powershell` 
-   4. Using python run the android_root_helper.py file.<br>
+   6. Using python run the android_root_helper.py file.<br>
       ``` 
       $ python android_root_helper.py
       ```
-   5. Follow the instructions in the console application
+   7. Follow the instructions in the console application
 
-   6. When your android restarts in the Custom Recovery flash, flash the Magisk zip transferred to your android device's storage and reboot.
+   8. When your android restarts in the Custom Recovery flash, flash the Magisk zip transferred to your android device's storage and reboot.
    
    Now Android device has been rooted.
    
