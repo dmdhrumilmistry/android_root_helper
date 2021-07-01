@@ -4,7 +4,7 @@ from os import error, getcwd, environ, pathsep
 from time import sleep
 
 
-adb_dir_name = 'minimal_abd_and_fastboot'
+adb_dir_name = 'minimal_adb_and_fastboot'
 curr_dir = getcwd()
 recovery_name = 'recovery.img'
 magisk_file_name = 'Magisk-v23.0.zip'

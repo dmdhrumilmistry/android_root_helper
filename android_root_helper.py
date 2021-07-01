@@ -8,7 +8,7 @@ from colorama import Style, Fore
 
 colorama.init(autoreset=True)
 
-adb_dir_name = 'minimal_abd_and_fastboot'
+adb_dir_name = 'minimal_adb_and_fastboot'
 recovery_name = 'recovery.img'
 magisk_file_name = 'Magisk-v23.0.zip'
 curr_dir = getcwd()
@@ -97,8 +97,8 @@ def start_custom_recovery_flash()->True:
             print(WHITE_BRIGHT + '[*] Found Custom Recovery image.')
             return True
         
-        print("[-] No custom recovery image found. Don't to rename custom recovery image as recovery.img")
-        print('[-] Cannot proceed further. Exiting Program...')
+        print(RED_BRIGHT + "[-] No custom recovery image found. Don't to rename custom recovery image as recovery.img")
+        print(RED_BRIGHT + '[-] Cannot proceed further. Exiting Program...')
         quit()
 
     try: 
@@ -150,11 +150,11 @@ def transfer_magisk_zip()->bool:
         print(WHITE_BRIGHT + '[*] Starting File Transfer')
         file_transfer_output = check_output('adb push {} {}'.format(source, destination), shell=True).decode()
         print(file_transfer_output)
-
+        return True
     except Exception :
         print(RED_BRIGHT + '[-] Exception Occurred while transferring Magisk Manager. Due to error you cannot move further but you can manually transfer and install zip.')
         print(RED_BRIGHT + 'Exception : ', Exception)
-
+        return False
 
 def adb_reboot_recovery()->bool:
     '''
@@ -202,4 +202,4 @@ if start_custom_recovery_flash():
         print(WHITE_BRIGHT + '[*] Voila!! Now your android device is rooted..')
 
 else:
-    print('[-] Failed to install custom image. Please try again after installing requirements.')
+    print(RED_BRIGHT + '[-] Failed to install custom image. Please try again after installing requirements.')
