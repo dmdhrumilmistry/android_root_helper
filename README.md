@@ -20,6 +20,7 @@ Android Rooting made easy.
       - `subprocess`
       - `os`
       - `time`
+      - `colorama`
       
    - Minimal ADB and Fastboot
    - [Magisk Manager](https://github.com/topjohnwu/Magisk)
