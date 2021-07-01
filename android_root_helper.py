@@ -169,15 +169,29 @@ if start_custom_recovery_flash():
     print('-'*40)
 
     print('[*] Starting to transfer magisk to sd card.')
-    if transfer_magisk_zip():
-        print('[+] Files Transferred successfully.')
-        print('-'*40)
+    try:
+        print('[*] press Ctrl+C simultaneously to tranfer files manually to sdcard.')
+        connected_devices = True
+        while connected_devices:
+            if connected_devices():
+                if transfer_magisk_zip():
+                    print('[+] Files Transferred successfully.')
+                    print('-'*40)
 
-    print('[*] Rebooting into Recovery, install the magisk zip from the sdcard.')
-    if adb_reboot_recovery():
-        print('[*] Now follow instruction Install->Select Storage-> Sd Card-> locate and choose Magisk zip-> swipe to install zip')
-        print('[*] After successfull installation reboot your android device. First Reboot may take some time to boot. Do not interrupt while your android device is booting.')
-        print('[*] Voila!! Now your android device is rooted..')
+                print('[*] Rebooting into Recovery, install the magisk zip from the sdcard.')
+
+    except KeyboardInterrupt :
+        print('[-] Ctrl+C detected! Exiting Program.')
+        connected_devices = False
+        
+    except Exception as e:
+        print('[-] Exception : ', e)
+    
+    finally:
+        if adb_reboot_recovery():
+            print('[*] Now follow instruction Install->Select Storage-> Sd Card-> locate and choose Magisk zip-> swipe to install zip')
+            print('[*] After successfull installation reboot your android device. First Reboot may take some time to boot. Do not interrupt while your android device is booting.')
+            print('[*] Voila!! Now your android device is rooted..')
 
 else:
     print('[-] Failed to install custom image. Please try again after installing requirements.')
